@@ -1,10 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://giglance-f9386.web.app"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zst2sy0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -19,12 +26,34 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
+
+    const taskCollection = client.db("taskDB").collection("tasks");
+
+    // app.get("/coffees", async (req, res) => {
+    //   const cursor = coffeeCollection.find();
+    //   const result = await cursor.toArray();
+    //   res.send(result);
+    // });
+
+    app.get("/tasks", async (req, res) => {
+      const cursor = taskCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.post("/tasks", async (req, res) => {
+      const newTask = req.body;
+      // console.log(newCoffee);
+      const result = await taskCollection.insertOne(newTask);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
   } finally {
   }
 }
