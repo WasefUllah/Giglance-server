@@ -46,14 +46,30 @@ async function run() {
         .sort({ deadline: 1 })
         .limit(6)
         .toArray();
-        console.log(tasks);
-        
+      console.log(tasks);
+
       res.send(tasks);
     });
 
     app.post("/tasks", async (req, res) => {
       const newTask = req.body;
       const result = await taskCollection.insertOne(newTask);
+      res.send(result);
+    });
+
+    app.put("/tasks/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updatedTask = req.body;
+      const updatedDoc = {
+        $set: updatedTask,
+      };
+      const result = await taskCollection.updateOne(
+        filter,
+        updatedDoc,
+        option
+      );
       res.send(result);
     });
 
