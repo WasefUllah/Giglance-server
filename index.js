@@ -32,14 +32,23 @@ async function run() {
 
     app.get("/tasks/:id", async (req, res) => {
       const id = req.params.id;
-      
-      
       const query = {
         _id: new ObjectId(id),
       };
       const result = await taskCollection.findOne(query);
-      console.log(result);
-      
+      // console.log(result);
+      res.send(result);
+    });
+
+    app.get("/sortedTasks", async (req, res) => {
+      const tasks = await taskCollection
+        .find({})
+        .sort({ deadline: 1 })
+        .limit(6)
+        .toArray();
+        console.log(tasks);
+        
+      res.send(tasks);
     });
 
     app.post("/tasks", async (req, res) => {
