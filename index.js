@@ -36,7 +36,6 @@ async function run() {
         _id: new ObjectId(id),
       };
       const result = await taskCollection.findOne(query);
-      // console.log(result);
       res.send(result);
     });
 
@@ -46,8 +45,6 @@ async function run() {
         .sort({ deadline: 1 })
         .limit(6)
         .toArray();
-      console.log(tasks);
-
       res.send(tasks);
     });
 
@@ -65,12 +62,23 @@ async function run() {
       const updatedDoc = {
         $set: updatedTask,
       };
-      const result = await taskCollection.updateOne(
-        filter,
-        updatedDoc,
-        option
-      );
+      const result = await taskCollection.updateOne(filter, updatedDoc, option);
       res.send(result);
+    });
+
+    app.patch("/tasks/:id", async (req, res) => {
+      const id = req.params.id;
+      const newBids = req.body;
+      const filter = {
+        _id: new ObjectId(id),
+      };
+      const option = { upsert: true };
+      const updatedDoc = {
+        $set: newBids,
+      };
+      const result = await taskCollection.updateOne(filter, updatedDoc, option);
+      res.send(result);
+      
     });
 
     app.delete("/tasks/:id", async (req, res) => {
