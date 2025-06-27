@@ -31,14 +31,19 @@ async function run() {
 
     app.get("/tasks", async (req, res) => {
       // console.log(req.query.category)
-      if (req.query) {
-        const result = await taskCollection.find({
-          category: req.query.category,
-        }).toArray();
+      console.log("hi");
+      if (req.query.category) {
+        const result = await taskCollection
+          .find({
+            category: req.query.category,
+          })
+          .toArray();
         res.send(result);
       } else {
+        console.log("hi");
         const cursor = taskCollection.find({}).sort({ deadline: 1 });
         const result = await cursor.toArray();
+        console.log(result);
         res.send(result);
       }
     });
