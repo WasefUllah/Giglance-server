@@ -30,9 +30,17 @@ async function run() {
     const taskCollection = client.db("taskDB").collection("tasks");
 
     app.get("/tasks", async (req, res) => {
-      const cursor = taskCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
+      // console.log(req.query.category)
+      if (req.query) {
+        const result = await taskCollection.find({
+          category: req.query.category,
+        }).toArray();
+        res.send(result);
+      } else {
+        const cursor = taskCollection.find({}).sort({ deadline: 1 });
+        const result = await cursor.toArray();
+        res.send(result);
+      }
     });
 
     app.get("/tasks/:id", async (req, res) => {
@@ -83,7 +91,6 @@ async function run() {
       };
       const result = await taskCollection.updateOne(filter, updatedDoc, option);
       res.send(result);
-      
     });
 
     app.delete("/tasks/:id", async (req, res) => {
