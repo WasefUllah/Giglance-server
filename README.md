@@ -5,11 +5,11 @@ This is the backend server for the **Giglance** freelancing platform. It is buil
 ## 🌐 Live Server
 
 Currently hosted at:  
-`https://giglance-server.vercel.app/`
+https://giglance-server.vercel.app/
 
 ## Client side repo:
 
-`https://github.com/WasefUllah/Giglance-client`
+https://github.com/WasefUllah/Giglance-client
 
 ## 📁 Features
 
